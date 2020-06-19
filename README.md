@@ -3,7 +3,8 @@ AirflowNewsCrawler is a software application for crawling online newspaper artic
 ```
 docker-compose up
 ```
-The application should be available on `localhost:8080`. You will see the airflow dashboard with our default examples
-![](img/dashboard.png)
+The application should be available on `localhost:8080`. You will see the airflow dashboard with our default examples:
+
+![](imgs/dashboard.png)
 
 
