@@ -1,0 +1,10 @@
+version: '3.0'
+services:
+  web:
+    build: .
+    ports:
+    - "8080:8080"
+    volumes:
+    - ./dags:/airflow/dags
+    - ./output:/output
+    - ./logs:/airflow/logs
