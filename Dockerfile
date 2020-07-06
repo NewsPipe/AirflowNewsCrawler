@@ -38,7 +38,8 @@ RUN pip3 install --upgrade pip \
     && pip install apache-airflow==${AIRFLOW_VERSION} \
     && pip install NewsCrawler3==${NEWSCRAWLER_VERSION} \
     && pip install SQLAlchemy==1.3.15 \
-    && pip install tfx==${TFX_VERSION}
+    && pip install tfx==${TFX_VERSION} \
+    && pip install flask-bcrypt
 
 
 # Setup Airflow
@@ -51,6 +52,8 @@ RUN sed -i'.orig' 's/dag_dir_list_interval = 300/dag_dir_list_interval = 1/g' ${
     && sed -i'.orig' 's/dag_default_view = tree/dag_default_view = graph/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/load_examples = True/load_examples = False/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/max_threads = 2/max_threads = 1/g' ${AIRFLOW_HOME}/airflow.cfg
+    && sed -i'.orig' 's/authenticate = False/authenticate = True\nauth_backend = airflow.contrib.auth.backends.password_auth/g' ${AIRFLOW_HOME}/airflow.cfg
+
 
 # Apply new config
 RUN airflow resetdb --yes \
