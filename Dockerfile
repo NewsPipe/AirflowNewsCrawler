@@ -41,7 +41,6 @@ RUN pip3 install --upgrade pip \
     && pip install tfx==${TFX_VERSION} \
     && pip install flask-bcrypt
 
-
 # Setup Airflow
 RUN airflow initdb
 
@@ -51,7 +50,7 @@ RUN sed -i'.orig' 's/dag_dir_list_interval = 300/dag_dir_list_interval = 1/g' ${
     && sed -i'.orig' 's/scheduler_heartbeat_sec = 5/scheduler_heartbeat_sec = 1/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/dag_default_view = tree/dag_default_view = graph/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/load_examples = True/load_examples = False/g' ${AIRFLOW_HOME}/airflow.cfg \
-    && sed -i'.orig' 's/max_threads = 2/max_threads = 1/g' ${AIRFLOW_HOME}/airflow.cfg
+    && sed -i'.orig' 's/max_threads = 2/max_threads = 1/g' ${AIRFLOW_HOME}/airflow.cfg \
     && sed -i'.orig' 's/authenticate = False/authenticate = True\nauth_backend = airflow.contrib.auth.backends.password_auth/g' ${AIRFLOW_HOME}/airflow.cfg
 
 
@@ -62,7 +61,12 @@ RUN airflow resetdb --yes \
 # Start inside airflow folder
 WORKDIR ${AIRFLOW_HOME}
 
-# Start Airflow and Scheduler
+# Copy scripts into container
 COPY ./scripts /scripts
+
+# Create user account
+RUN python3 /scripts/create_account.py
+
+# Start Airflow and Scheduler
 RUN chmod u+x /scripts/start-airflow.sh
 CMD /scripts/start-airflow.sh
